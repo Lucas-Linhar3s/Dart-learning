@@ -12,6 +12,7 @@ dependencies:
   shelf_modular: ^2.0.1
   shelf_router: ^1.0.0
   shelf_cors_headers: ^0.1.4
+  mysql_utils: ^2.1.1
 
 dev_dependencies:
   http: ^0.13.0
