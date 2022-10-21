@@ -29,8 +29,15 @@ class AppRepository {
     }
   }
 
-  Future<bool> putUsers() async {
-    return false;
+  Future<ResultFormat> putUsers(ModelUsers users) async {
+    final query = await db.query(
+        'UPDATE `Users` SET name=:name, email=:email WHERE id=:id',
+        values: {
+          'name': users.name,
+          'email': users.email,
+          'id': users.id,
+        });
+    return query;
   }
 
   Future<bool> putPassword() async {

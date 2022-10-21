@@ -8,7 +8,7 @@ class AppRoutes extends Module {
   List<ModularRoute> get routes => [
         Route.post('/user', Users.postUsers),
         Route.put('/user', Users.putUsers),
-        Route.put('/user', Users.putPassword),
+        Route.put('/user?password', Users.putPassword),
         Route.delete('/user/:id', Users.deleteUser),
       ];
 }
