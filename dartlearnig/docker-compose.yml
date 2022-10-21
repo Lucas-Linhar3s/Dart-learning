@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql
+    container_name: dart-learnig
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'projeto'
+      MYSQL_USER: 'Lucas'
+      MYSQL_PASSWORD: 'Go7/flo2'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3308:3306'
+    expose:
+      - 3308
+    volumes:
+      - './volumes/mysql:/var/lib/mysql'
+      - './dados.sql:/docker-entrypoint-initdb.d/1.sql'
