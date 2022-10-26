@@ -54,7 +54,9 @@ class AppRepository {
     }
   }
 
-  Future<bool> deleteUser() async {
-    return false;
+  Future<ResultFormat> deleteUser(String id) async {
+    final query =
+        await db.query('DELETE FROM `Users` WHERE id=:id;', values: {'id': id});
+    return query;
   }
 }

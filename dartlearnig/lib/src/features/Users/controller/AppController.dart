@@ -59,7 +59,14 @@ class AppController {
   }
 
   Future<Response> deleteUser(ModularArguments req) async {
-    final result = _repository.deleteUser();
-    return Response(200, body: 'deleteUser');
+    final id = req.params['id'];
+    final result = await _repository.deleteUser(id);
+    if (result.affectedRows != 0) {
+      final map = {'Usuario com id: $id, foi excluido com successo!'};
+      return Response(200, body: jsonEncode(map.toList()), headers: _jsonResponse);
+    } else {
+      final map = {'Erro ao deletar usuarios com id: $id!'};
+      return Response(500, body: jsonEncode(map.toList()), headers: _jsonResponse);
+    }
   }
 }
