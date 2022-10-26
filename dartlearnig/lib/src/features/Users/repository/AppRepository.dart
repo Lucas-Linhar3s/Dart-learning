@@ -1,3 +1,4 @@
+import 'package:dartlearnig/src/core/services/BCrypt/configBCrypt.dart';
 import 'package:dartlearnig/src/core/services/database/db.dart';
 import 'package:dartlearnig/src/features/Users/domain/models/modelUsers.dart';
 import 'package:mysql_utils/mysql_utils.dart';
@@ -6,12 +7,13 @@ import 'package:shelf/shelf.dart';
 class AppRepository {
   MysqlUtils db = ConfigDatabase().ConnectionDB();
   Future<Map<String, Object>> postUsers(ModelUsers users) async {
+    final passHash = ConfigBCrypt().generateBCrypt(users.password);
     final query = await db.query(
         'INSERT INTO `Users`(name, email, password) VALUES (:name, :email, :password)',
         values: {
           'name': users.name,
           'email': users.email,
-          'password': users.password,
+          'password': passHash,
         });
     if (query.lastInsertID != 0) {
       final map = {
@@ -40,11 +42,21 @@ class AppRepository {
     return query;
   }
 
-  Future<bool> putPassword() async {
-    return false;
+  Future<String> putPassword(String password, String id) async {
+    final hashpq = ConfigBCrypt().generateBCrypt(password);
+    final query = await db.query(
+        'UPDATE `Users` SET password=:password WHERE id=:id;',
+        values: {'password': hashpq, 'id': id});
+    if (query.affectedRows != 0) {
+      return "Senha atualizada com successo";
+    } else {
+      return "Erro ao atualizar senha";
+    }
   }
 
-  Future<bool> deleteUser() async {
-    return false;
+  Future<ResultFormat> deleteUser(String id) async {
+    final query =
+        await db.query('DELETE FROM `Users` WHERE id=:id;', values: {'id': id});
+    return query;
   }
 }

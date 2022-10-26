@@ -26,10 +26,10 @@ class AppController {
 
   Future<Response> putUsers(ModularArguments req) async {
     ModelUsers users = ModelUsers(
-      id: req.data['id'],
-      name: req.data['name'],
-      email: req.data['email'],
-    );
+        id: req.data['id'],
+        name: req.data['name'],
+        email: req.data['email'],
+        password: "");
     final result = await _repository.putUsers(users);
     if (result.affectedRows != 0) {
       final map = {
@@ -47,12 +47,26 @@ class AppController {
   }
 
   Future<Response> putPassword(ModularArguments req) async {
-    final result = _repository.putPassword();
-    return Response(200, body: 'putPassword');
+    final paramsID = req.params['id'];
+    final Newpassword = req.data['newPassword'];
+    final ConPassword = req.data['conPassword'];
+    if (Newpassword == ConPassword) {
+      final result = await _repository.putPassword(ConPassword, paramsID);
+      return Response(200, body: result);
+    } else {
+      return Response(500, body: "Senhas nao conferem");
+    }
   }
 
   Future<Response> deleteUser(ModularArguments req) async {
-    final result = _repository.deleteUser();
-    return Response(200, body: 'deleteUser');
+    final id = req.params['id'];
+    final result = await _repository.deleteUser(id);
+    if (result.affectedRows != 0) {
+      final map = {'Usuario com id: $id, foi excluido com successo!'};
+      return Response(200, body: jsonEncode(map.toList()), headers: _jsonResponse);
+    } else {
+      final map = {'Erro ao deletar usuarios com id: $id!'};
+      return Response(500, body: jsonEncode(map.toList()), headers: _jsonResponse);
+    }
   }
 }
